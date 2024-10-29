@@ -61,8 +61,41 @@ void modifier(tache tc[], int index){
         scanf("%s",&tc[index].priorite);
 		}
         //fonction qui permet de supprimer une tache
-        
+       
+void supprimer(tache taches[], int nbr_tache, int index){
+	for(int i=index; i<(nbr_tache)-1; i++){
+		taches[i]=taches[i+1]; //tache 4 suppreimer la tache 5 ghatwlli f case 4 
+	}
+		nbr_tache--; 
+}
 	int main(){
+		tache taches[100];
+		int nbr=0;
+		while(1){
+	
+		printf("**************menu**************\n");
+		printf(" 1-Ajouter une Tache :\n");	
+		printf(" 2-Afficher la Liste des Taches :\n");
+    	printf(" 3-Modifier une Tache :\n");
+    	printf(" 4-Supprimer une Tache :\n");
+    	printf(" 5-Filtrer les Taches :\n");
+    	printf(" 6-Quitter \n");
+    	printf("*********************************\n");
+    int choix;
+    printf("choisi votre choix : ");
+    scanf("%d",&choix);
+    switch(choix) 
+	{
+    	case 1:
+    		taches[nbr]=add();
+    		nbr++;
+			break;
+    
+    	    	
+	}
+	
+		 
+		}	
 return 0;
 }
 
