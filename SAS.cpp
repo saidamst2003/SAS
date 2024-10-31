@@ -123,7 +123,22 @@ int main() {
                     }
                 }
                 break;
-
+    
+             case 4:
+                if (nbr_tache == 0) {
+                    printf("Pas de tache à supprimer.\n");
+                } else {
+                    int index;
+                    printf("Entrer l'index de tache à supprimer : ");
+                    scanf("%d", &index);
+                    if (index >= 0 && index < nbr_tache) {
+                        supprimer(taches, &nbr_tache, index);
+                        printf("Tache supprimée.\n");
+                    } else {
+                        printf("Indice invalide.\n");
+                    }
+                }
+                break;
    
 }
 }while(choix!=7);
