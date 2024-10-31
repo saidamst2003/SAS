@@ -41,7 +41,7 @@ void afficher(tache tc[], int nbr_tache) {
     for (int i = 0; i < nbr_tache; i++) {
         printf("Titre: %s\n", tc[i].titre);    
         printf("Description: %s\n", tc[i].description);
-        printf("******* Date de creation: *******\n");
+        printf("~~~~~~~~ Date de creation: ~~~~~~~~\n");
         printf("%d / %d / %d\n", tc[i].dt.jour, tc[i].dt.mois, tc[i].dt.annee);
         printf("Priorite: %s\n", tc[i].priorite);
     }	
@@ -73,6 +73,34 @@ void supprimer(tache taches[], int *nbr_tache, int index) {
     (*nbr_tache)--; // Decrement the number of tasks
 }
 
+// Fonction pour filtrer les tâches par priorité
+void filtrer(tache tc[], int nbr) {
+    if (nbr == 0) {
+        printf("Aucune tâche à filtrer.\n");
+        return;
+    }
+    
+    char priorite[10];
+    printf("Entrez la priorité à filtrer (Haute / Basse) : ");
+    scanf("%s", priorite);
+
+    printf("Tâches avec la priorité %s :\n", priorite);
+    int found = 0;
+    for (int i = 0; i < nbr; i++) {
+        if (strcmp(tc[i].priorite, priorite) == 0) {
+            printf("Titre: %s\n", tc[i].titre);    
+            printf("Description: %s\n", tc[i].description);
+            printf("~~~~~~~~ Date de création: ~~~~~~~~\n");
+            printf("%d / %d / %d\n", tc[i].dt.jour, tc[i].dt.mois, tc[i].dt.annee);
+            printf("Priorité: %s\n", tc[i].priorite);
+            found = 1;
+        }
+    }
+    
+    if (!found) {
+        printf("Aucune tâche trouvée avec cette priorité.\n");
+    }
+}
 int main() {
     int choix;
     tache taches[max];
@@ -86,8 +114,8 @@ int main() {
         printf("4. Supprimer une tache\n");
         printf("5. Filtrer une tache\n");
         printf("6. Quitter\n");
-        
-        printf("Votre choix : ");
+        printf("*********************\n");
+        printf("~Votre choix : ");
         scanf("%d", &choix);
         
         switch (choix) {
@@ -112,7 +140,7 @@ int main() {
                 if (nbr_tache == 0) { // Check if tasks exist
                     printf("Pas de tache à modifier.\n");
                 } else {
-                    printf("\n+++++++++++++ Vous avez %d taches +++++++++++++\n", nbr_tache); 
+                    printf("\n____Vous avez %d taches____\n", nbr_tache); 
                     int index;
                     printf("Entrer l'index pour modifier : ");
                     scanf("%d", &index);
@@ -139,8 +167,18 @@ int main() {
                     }
                 }
                 break;
-   
+                case 5:
+                filtrer(taches, nbr_tache); // Filtrer les tâches
+                break;
+
+            case 6:
+                printf("Au revoir!\n");
+                break;
+
+            default:
+                printf("Choix invalide, veuillez réessayer.\n");
 }
+
 }while(choix!=7);
 
  return 0;
