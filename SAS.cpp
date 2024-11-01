@@ -1,25 +1,24 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#define max 30
-
-typedef struct {
+#define max 30 // Structure principale pour une tâche
+// Structure pour gérer les dates
+typedef struct { 
     int jour;
     int mois;
     int annee;
 } date;
-
+// Structure principale pour une tâche
 typedef struct {
-    char titre[50];      
-    char description[100]; 
-    date dt;
-    char priorite[10];     
+    char titre[50];       // Titre de la tâche (limité à 50 caractères)
+    char description[100]; // Description détaillée (limitée à 100 caractères)
+    date dt;              // Date de la tâche (utilise la structure date)
+    char priorite[10];    // Niveau de priorité (Haute ou Basse)
 } tache;
-
-// Function to create a new task
+// Fonction qui demande à l'utilisateur les détails d'une nouvelle tâche
+// Retourne une structure tache complètement remplie
 tache add() {
-    tache tc;
-
+    tache tc; 
     printf("Entrer le titre d'une tache: ");
     scanf("%s", tc.titre);
     printf("Entrer la description de la tache: ");
@@ -37,8 +36,10 @@ tache add() {
     return tc;
 }
 
-// Function to display tasks
-void afficher(tache tc[], int nbr_tache) {
+// Fonction qui affiche la liste de toutes les tâches existantes
+void afficher(tache tc[], int nbr_tache) { 
+// tc[]: tableau contenant toutes les tâches
+// nbr_tache: nombre total de tâches à afficher
     printf("Liste des taches : \n");
 
     for (int i = 0; i < nbr_tache; i++) {
@@ -51,8 +52,11 @@ void afficher(tache tc[], int nbr_tache) {
     }    
 }
 
-// Function to modify a task
+// Fonction qui permet de modifier une tâche existante
+
 void modifier(tache tc[], int index) {
+// tc[]: tableau de tâches
+// index: position de la tâche à modifier dans le tableau
     printf("Modifier les informations de: %s\n", tc[index].titre);
     printf("Entrer le nouveau titre: ");
     scanf("%s", tc[index].titre);
@@ -69,15 +73,19 @@ void modifier(tache tc[], int index) {
     scanf("%s", tc[index].priorite);
 }
 
-// Function to delete a task
+// Fonction qui supprime une tâche du tableau
+// taches[]: tableau de toutes les tâches
+// *nbr_tache: pointeur vers le nombre total de tâches (modifié après suppression)
+// index: position de la tâche à supprimer
 void supprimer(tache taches[], int *nbr_tache, int index) {
     for (int i = index; i < (*nbr_tache) - 1; i++) {
-        taches[i] = taches[i + 1]; // Shift tasks left
+        taches[i] = taches[i + 1]; 
     }
-    (*nbr_tache)--; // Decrement the number of tasks
+    (*nbr_tache)--; 
 }
-
-// Fonction pour filtrer les tâches par priorité
+// Fonction qui filtre et affiche les tâches selon leur priorité
+// tc[]: tableau de tâches à filtrer
+// nbr: nombre total de tâches dans le tableau
 void filtrer(tache tc[], int nbr) {
     if (nbr == 0) {
         printf("Aucune tâche à filtrer.\n");
@@ -97,6 +105,7 @@ void filtrer(tache tc[], int nbr) {
             printf("Description: %s\n", tc[i].description);
             printf("- Date de création: \n");
             printf("%d / %d / %d\n", tc[i].dt.jour, tc[i].dt.mois, tc[i].dt.annee);
+            
             printf("Priorité: %s\n", tc[i].priorite);
             found = 1;
         }
@@ -107,21 +116,26 @@ void filtrer(tache tc[], int nbr) {
     }
 }
 
-// Nouvelle fonction pour confirmer la sortie
+// Fonction qui demande confirmation avant de quitter le programme
 int confirmerSortie() {
     char reponse;
     printf("\nVoulez-vous vraiment quitter le programme ? (O/N): ");
     while (getchar() != '\n');
     scanf("%c", &reponse);
-    return (tolower(reponse) == 'o');
+    return (tolower(reponse) == 'o');// Retourne 1 si l'utilisateur confirme, 0 sinon
 }
-
+// Fonction principale du programme
+// Gère le menu principal et coordonne toutes les opérations
 int main() {
-    int choix;
-    tache taches[max];
-    int nbr_tache = 0;
+   
+    int choix;            // Stocke le choix de l'utilisateur dans le menu
+    tache taches[max];    // Tableau pour stocker toutes les tâches (maximum défini par max)
+    int nbr_tache = 0;    // Compteur du nombre actuel de tâches
     
+    // Boucle principale du programme
     do {
+    	  // Affichage du menu avec toutes les options disponibles
+
         printf("\n********Menu********\n");
         printf("1. Ajouter une tache\n");
         printf("2. Afficher les taches\n");
@@ -131,15 +145,16 @@ int main() {
         printf("6. Quitter\n");
         printf("*********************\n");
         printf("~Votre choix : ");
-        
+                // Vérifie si l'entrée est un nombre valide
         if(scanf("%d", &choix) != 1) {
             printf("Erreur : Veuillez entrer un nombre.\n");
             while(getchar() != '\n');
             continue;
         }
-        
+         // Traitement des différentes options du menu
+
         switch (choix) {
-            case 1:
+            case 1:// Option pour ajouter une nouvelle tâche
                 if (nbr_tache < max) {
                     taches[nbr_tache] = add();
                     nbr_tache++;
@@ -149,7 +164,8 @@ int main() {
                 }
                 break;
 
-            case 2:
+            case 2: // Option pour afficher toutes les tâches
+
                 if (nbr_tache == 0) {
                     printf("Pas de tache à afficher.\n");
                 } else {
@@ -157,7 +173,7 @@ int main() {
                 }
                 break;
 
-            case 3:
+            case 3: // Option pour modifier une tâche existante
                 if (nbr_tache == 0) {
                     printf("Pas de tache à modifier.\n");
                 } else {
@@ -173,7 +189,7 @@ int main() {
                 }
                 break;
     
-            case 4:
+            case 4: // Option pour supprimer une tâche
                 if (nbr_tache == 0) {
                     printf("Pas de tache à supprimer.\n");
                 } else {
@@ -189,21 +205,21 @@ int main() {
                 }
                 break;
 
-            case 5:
+            case 5: // Option pour filtrer les tâches par priorité
                 filtrer(taches, nbr_tache);
                 break;
 
-            case 6:
+            case 6: // Option pour quitter le programme
                 if (confirmerSortie()) {
                     printf("\nAu revoir! Merci d'avoir utilisé notre gestionnaire de tâches.\n");
                     return 0;
                 }
                 break;
 
-            default:
+            default:// Gestion des choix invalides
                 printf("Choix invalide, veuillez réessayer.\n");
         }
-    } while(1); // Boucle infinie qui ne se termine que par return dans case 6
+    } while(1); // Continue jusqu'à ce que l'utilisateur choisisse de quitter
 
     return 0;
 }
