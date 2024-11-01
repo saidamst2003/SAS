@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 #define max 30
 
 typedef struct {
@@ -9,10 +10,10 @@ typedef struct {
 } date;
 
 typedef struct {
-    char titre[50];       // Changed to an array
-    char description[100]; // Changed to an array
+    char titre[50];      
+    char description[100]; 
     date dt;
-    char priorite[10];     // Changed to an array
+    char priorite[10];     
 } tache;
 
 // Function to create a new task
@@ -30,7 +31,7 @@ tache add() {
     scanf("%d", &tc.dt.mois);
     printf("L'annee: ");
     scanf("%d", &tc.dt.annee);
-    printf("Entrer la priorite (High / Low): ");
+    printf("Entrer la priorite (Haute / Basse) : ");
     scanf("%s", tc.priorite);
     
     return tc;
@@ -38,13 +39,16 @@ tache add() {
 
 // Function to display tasks
 void afficher(tache tc[], int nbr_tache) {
+    printf("Liste des taches : \n");
+
     for (int i = 0; i < nbr_tache; i++) {
+        printf("~~~~~~~ taches %d.~~~~~~~~\n",i+1);
         printf("Titre: %s\n", tc[i].titre);    
         printf("Description: %s\n", tc[i].description);
-        printf("~~~~~~~~ Date de creation: ~~~~~~~~\n");
+        printf("-Date de creation: \n");
         printf("%d / %d / %d\n", tc[i].dt.jour, tc[i].dt.mois, tc[i].dt.annee);
         printf("Priorite: %s\n", tc[i].priorite);
-    }	
+    }    
 }
 
 // Function to modify a task
@@ -88,9 +92,10 @@ void filtrer(tache tc[], int nbr) {
     int found = 0;
     for (int i = 0; i < nbr; i++) {
         if (strcmp(tc[i].priorite, priorite) == 0) {
+            printf("~~~~~~~ taches %d.~~~~~~~~\n",i+1);
             printf("Titre: %s\n", tc[i].titre);    
             printf("Description: %s\n", tc[i].description);
-            printf("~~~~~~~~ Date de création: ~~~~~~~~\n");
+            printf("- Date de création: \n");
             printf("%d / %d / %d\n", tc[i].dt.jour, tc[i].dt.mois, tc[i].dt.annee);
             printf("Priorité: %s\n", tc[i].priorite);
             found = 1;
@@ -101,6 +106,16 @@ void filtrer(tache tc[], int nbr) {
         printf("Aucune tâche trouvée avec cette priorité.\n");
     }
 }
+
+// Nouvelle fonction pour confirmer la sortie
+int confirmerSortie() {
+    char reponse;
+    printf("\nVoulez-vous vraiment quitter le programme ? (O/N): ");
+    while (getchar() != '\n');
+    scanf("%c", &reponse);
+    return (tolower(reponse) == 'o');
+}
+
 int main() {
     int choix;
     tache taches[max];
@@ -116,35 +131,41 @@ int main() {
         printf("6. Quitter\n");
         printf("*********************\n");
         printf("~Votre choix : ");
-        scanf("%d", &choix);
+        
+        if(scanf("%d", &choix) != 1) {
+            printf("Erreur : Veuillez entrer un nombre.\n");
+            while(getchar() != '\n');
+            continue;
+        }
         
         switch (choix) {
             case 1:
                 if (nbr_tache < max) {
-                    taches[nbr_tache] = add(); // Add a new task
-                    nbr_tache++; // Increment number of tasks
+                    taches[nbr_tache] = add();
+                    nbr_tache++;
+                    printf("\nTâche ajoutée avec succès!\n");
                 } else {
                     printf("Limite de taches atteinte.\n");
                 }
                 break;
 
             case 2:
-                if (nbr_tache == 0) { // Check if tasks exist
+                if (nbr_tache == 0) {
                     printf("Pas de tache à afficher.\n");
                 } else {
-                    afficher(taches, nbr_tache); // Display tasks
+                    afficher(taches, nbr_tache);
                 }
                 break;
 
             case 3:
-                if (nbr_tache == 0) { // Check if tasks exist
+                if (nbr_tache == 0) {
                     printf("Pas de tache à modifier.\n");
                 } else {
-                    printf("\n____Vous avez %d taches____\n", nbr_tache); 
+                    printf("\n____Vous avez %d taches____\n", nbr_tache);
                     int index;
                     printf("Entrer l'index pour modifier : ");
                     scanf("%d", &index);
-                    if (index >= 0 && index < nbr_tache) { // Check index validity
+                    if (index >= 0 && index < nbr_tache) {
                         modifier(taches, index);
                     } else {
                         printf("Indice invalide.\n");
@@ -152,7 +173,7 @@ int main() {
                 }
                 break;
     
-             case 4:
+            case 4:
                 if (nbr_tache == 0) {
                     printf("Pas de tache à supprimer.\n");
                 } else {
@@ -167,19 +188,22 @@ int main() {
                     }
                 }
                 break;
-                case 5:
-                filtrer(taches, nbr_tache); // Filtrer les tâches
+
+            case 5:
+                filtrer(taches, nbr_tache);
                 break;
 
             case 6:
-                printf("Au revoir!\n");
+                if (confirmerSortie()) {
+                    printf("\nAu revoir! Merci d'avoir utilisé notre gestionnaire de tâches.\n");
+                    return 0;
+                }
                 break;
 
             default:
                 printf("Choix invalide, veuillez réessayer.\n");
-}
+        }
+    } while(1); // Boucle infinie qui ne se termine que par return dans case 6
 
-}while(choix!=7);
-
- return 0;
+    return 0;
 }
