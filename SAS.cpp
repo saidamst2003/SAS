@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#define max 30 // Structure principale pour une tâche
+#define max 30 
+
 // Structure pour gérer les dates
 typedef struct { 
     int jour;
@@ -15,6 +16,27 @@ typedef struct {
     date dt;              // Date de la tâche (utilise la structure date)
     char priorite[10];    // Niveau de priorité (Haute ou Basse)
 } tache;
+
+
+bool validerDate(date dt) {
+   
+   
+    int annee=dt.annee;
+    int mois=dt.mois;
+    int jour=dt.jour;
+  
+
+    // Valider année, mois et jour
+    if (annee < 2024) return false;
+    if (mois < 1 || mois > 12) return false;
+    if (jour < 1 || jour > 31) return false;
+
+    // Vérification supplémentaire pour les jours du mois (simplifiée, ne considère pas les années bissextiles)
+    if ((mois == 4 || mois == 6 || mois == 9 || mois == 11) && jour > 30) return false;
+    if (mois == 2 && jour > 29) return false; // Vérification simplifiée ; ne valide pas correctement les années bissextiles
+
+    return true;
+}
 // Fonction qui demande à l'utilisateur les détails d'une nouvelle tâche
 // Retourne une structure tache complètement remplie
 tache add() {
@@ -24,18 +46,26 @@ tache add() {
     printf("Entrer la description de la tache: ");
     scanf("%s", tc.description);
     printf("Entrer la date de la tache:\n");
-    printf("Le jour : ");    
-    scanf("%d", &tc.dt.jour);
+    
+	do{  
+	printf("Le jour : ");
+	scanf("%d", &tc.dt.jour);
     printf("Le mois: ");
     scanf("%d", &tc.dt.mois);
     printf("L'annee: ");
     scanf("%d", &tc.dt.annee);
+    if (!validerDate(tc.dt)) {
+            printf("Date invalide. Veuillez entrer une date valide au format AAAA-MM-JJ.\n"); // Ne pas incrémenter le nombre de tâches
+        }
+	} while(!validerDate(tc.dt));
+   
     printf("Entrer la priorite (Haute / Basse) : ");
     scanf("%s", tc.priorite);
     
     return tc;
-}
 
+
+}
 // Fonction qui affiche la liste de toutes les tâches existantes
 void afficher(tache tc[], int nbr_tache) { 
 // tc[]: tableau contenant toutes les tâches
